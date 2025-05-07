@@ -36,45 +36,52 @@ public class UnitTest1 // define 'UnitTest1' class
     [TestMethod] // annotate method as 'TestMethod'
     public void TestSameGradeInSubject() // define method 'TestSameGradeInSubject'
     {
-        var sameGradeInSubject = Class1.groupedBySubject(students); // to group the students by subject and their corresponding grades
-        foreach (var subject in sameGradeInSubject) // loop through each subject
+        var sameGradeInSubject = Class1.groupedBySubject(students);
+        var allSubjectGrades = sameGradeInSubject.SelectMany(
+            subject => subject.Groups,
+            (subject, grade) => new { subject, grade }
+        );
+
+        foreach (var item in allSubjectGrades)
         {
-            foreach (var grade in subject.Groups) // loop through each grade in subject
+            switch (item.grade.Grade)
             {
-                switch (grade.Grade) // switch statement to handle logic based on the value "grade.Grade"
-                {
-                    case 70: // enters this block if "grade.Grade" is 70
-                        if (subject.SubjectIndex == 0) // check if the subject index is 0
+                case 70:
+                    if (item.subject.SubjectIndex == 0)
+                    {
+                        Assert.IsTrue(item.grade.Names.Count == 2);
+                        var expected = new[] { "Alice Smith", "Bob Johnson" };
+                        foreach (var (actual, expectedName) in item.grade.Names.Zip(expected))
                         {
-                            Assert.IsTrue(grade.Names.Count == 2); // asserts that there are exactly 2 names associated with the grade
-                            foreach (var (actual, expected) in grade.Names.Zip(new string[2] { "Alice Smith", "Bob Johnson" })) // loops through both grade.Names and a list of expected names
-                            {
-                                Assert.AreEqual(actual, expected); // asserts that each actual name matches the expected name
-                            }
+                            Assert.AreEqual(actual, expectedName);
                         }
-                        else
-                        {
-                            Assert.IsTrue(grade.Names.Count == 1); // Verify that there is exactly one name associated with this grade
-                            checkNames(grade, "Alice Smith"); // Check that the only name is "Alice Smith"
-                        }
-                        break;
-                    case 73:
-                        Assert.IsTrue(grade.Names.Count == 1); // Ensure there is exactly one name for grade 73
-                        checkNames(grade, "Bob Johnson"); // Confirm that the name is "Bob Johnson"
-                        break;
-                    case 74:
-                        Assert.IsTrue(grade.Names.Count == 1); // Ensure there is exactly one name for grade 74
-                        checkNames(grade, "Charlie Brown"); // Confirm that the name is "Charlie Brown"
-                        break;
-                    case 85:
-                        Assert.IsTrue(grade.Names.Count == 1); // Ensure there is exactly one name for grade 85
-                        checkNames(grade, "David Lee"); // Confirm that the name is "David Lee"
-                        break;
-                    case 90:
-                        Assert.IsTrue(grade.Names.Count == 1); // Ensure there is exactly one name for grade 90
-                        checkNames(grade, "Eve Davis"); // Confirm that the name is "Eve Davis"
-                        break;
-                }
+                    }
+                    else
+                    {
+                        Assert.IsTrue(item.grade.Names.Count == 1);
+                        checkNames(item.grade, "Alice Smith");
+                    }
+                    break;
+
+                case 73:
+                    Assert.IsTrue(item.grade.Names.Count == 1);
+                    checkNames(item.grade, "Bob Johnson");
+                    break;
+
+                case 74:
+                    Assert.IsTrue(item.grade.Names.Count == 1);
+                    checkNames(item.grade, "Charlie Brown");
+                    break;
+
+                case 85:
+                    Assert.IsTrue(item.grade.Names.Count == 1);
+                    checkNames(item.grade, "David Lee");
+                    break;
+
+                case 90:
+                    Assert.IsTrue(item.grade.Names.Count == 1);
+                    checkNames(item.grade, "Eve Davis");
+                    break;
             }
         }
     }

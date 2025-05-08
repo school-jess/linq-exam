@@ -28,17 +28,22 @@ foreach (var newStudent in newStudents) // loopp through the new students
 }
 
 var failingStudents = Class1.getFailingStudents(students); // get failing students
+Console.WriteLine("Failing Students:");
 foreach (var failingStudent in failingStudents) // loop through failing students
 {
     Console.WriteLine(failingStudent); // print to console each failing student
 }
+Console.WriteLine();
 
+Console.WriteLine("Students with the same first name:");
 var studentsWithSameFirstName = Class1.getStudentWithSameFirstName(students);// get students with the same starting firstname
 foreach (var studentWithSameFirstName in studentsWithSameFirstName)// loop students with the same first name
 {
     Console.WriteLine(studentWithSameFirstName); // print to console each student with same first name
 }
+Console.WriteLine();
 
+Console.WriteLine("Students grouped by the same score for each subject");
 var sameGradeInSubject = Class1.groupedBySubject(students); // get the grades of each subject and categorize them by their grade and create a List of names per grade
 foreach (var subject in sameGradeInSubject) // loop through each subject
 {
